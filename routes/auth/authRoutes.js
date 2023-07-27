@@ -1,6 +1,11 @@
 const { Router } = require('express');
 
-const { signup, login } = require('../../controllers/auth');
+const {
+  signup,
+  login,
+  logout,
+  getCurrentUser,
+} = require('../../controllers/auth');
 const { checkSignupUserData } = require('../../middlewares/auth');
 
 const router = Router();
@@ -10,5 +15,11 @@ router.post('/signup', checkSignupUserData, signup);
 
 // login - login user - authentification
 router.post('/login', login);
+
+// logout - logout current user
+router.post('/logout', logout);
+
+// current - get current user
+router.get('/current', getCurrentUser);
 
 module.exports = router;
