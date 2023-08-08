@@ -15,6 +15,7 @@ dotenv.config({
 
 const contactRoutes = require('./routes/contacts');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -47,7 +48,9 @@ app.use((req, res, next) => {
 
 // ROUTES ===============================================
 app.use('/api/contacts', contactRoutes);
-app.use('/api/users', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use(express.static('public'));
 
 app.get('/ping', (req, res) => {
   // res.status(201).send('<h1>HELLO FROM EXPRESS!!!</h1>');

@@ -1,8 +1,9 @@
 const { Types } = require('mongoose');
-const { AppError } = require('../../utils');
-const { signToken, checkToken } = require('./jwtService');
-const userRolesEnum = require('../../constants/userRolesEnum');
-const User = require('../../models/user');
+
+const User = require('../models/user');
+const { AppError } = require('../utils');
+const { signToken } = require('../services/auth');
+const userRolesEnum = require('../constants/userRolesEnum');
 
 /**
  * Check if user exists service.
@@ -121,31 +122,19 @@ exports.loginUser = async ({ email, password }) => {
 };
 
 /**
- * Get current user via sign token.
- * @param {Object} token
- * @returns {Object}
+ * Check current password and save new password.
+ * @param {string} userId
+ * @param {string} currentPassword
+ * @param {string} newPassword
  */
-exports.getCurrentUser = async (token) => {
-  const userId = checkToken(token);
+exports.checkUserPassword = async (userId, currentPassword, newPassword) => {
+  const user = await User.findById(userId).select('password');
 
-  const user = await User.findById(userId);
+  if (!(await user.checkPassword(currentPassword, user.password))) {
+    throw new AppError(401, 'Current password wrong..');
+  }
 
-  if (!user) throw new AppError(401, 'Not authorized..');
+  user.password = newPassword;
 
-  return { user };
-};
-
-/**
- * Logout.
- * @param {Object} token
- * @returns {Object}
- */
-exports.logout = async (token) => {
-  const userId = checkToken(token);
-
-  const user = await User.findById(userId);
-
-  if (!user) throw new AppError(401, 'Not authorized..');
-
-  return { user };
+  await user.save();
 };
