@@ -1,3 +1,7 @@
-const { signup, login, logout, getCurrentUser } = require('./authController');
+const {
+  signup,
+  login,
+  logout
+} = require('./authController');
 
-module.exports = { signup, login, logout, getCurrentUser };
+module.exports = { signup, login, logout};

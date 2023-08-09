@@ -31,22 +31,8 @@ const logout = catchAsync(async (req, res, next) => {
   res.sendStatus(204);
 });
 
-const getCurrentUser = catchAsync(async (req, res, next) => {
-  // Отримуємо токен з заголовка Authorization (Bearer токен)
-  const token = req.headers.authorization?.split(' ')[1];
-
-  const { user } = await userService.getCurrentUser(token);
-
-  // Повертаємо успішну відповідь і дані користувача
-  res.status(200).json({
-    msg: 'Sucess',
-    user,
-  });
-});
-
 module.exports = {
   signup,
   login,
   logout,
-  getCurrentUser,
 };
