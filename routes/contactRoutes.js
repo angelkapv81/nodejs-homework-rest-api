@@ -2,11 +2,11 @@
 
 const { Router } = require('express');
 
-const controllers = require('../../controllers/contacts');
+const controllers = require('../controllers/contacts');
 
-const middleware = require('../../middlewares/contacts');
+const middleware = require('../middlewares/contacts');
 
-const { protect } = require('../../middlewares/auth');
+const { protect } = require('../middlewares/auth');
 
 const router = Router();
 

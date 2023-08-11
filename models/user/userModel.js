@@ -28,6 +28,8 @@ const userSchema = new Schema(
       default: userRolesEnum.USER,
     },
     avatar: String,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
   },
   {
     timestamps: true,
@@ -36,7 +38,7 @@ const userSchema = new Schema(
 );
 
 // Pre save mongoose hook. Fires on Create and Save.
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function(next) {
   if (this.isNew) {
     const emailHash = crypto.createHash('md5').update(this.email).digest('hex');
 
@@ -57,8 +59,16 @@ userSchema.pre('save', async function (next) {
  * @param {string} hash
  * @returns {Promise<boolean>}
  */
-userSchema.methods.checkPassword = (candidate, hash) =>
-  bcrypt.compare(candidate, hash);
+userSchema.methods.checkPassword = (candidate, hash) => bcrypt.compare(candidate, hash);
+
+userSchema.methods.createPasswordResetToken = function() {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
+};
 
 const User = model('User', userSchema);
 

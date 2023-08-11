@@ -10,6 +10,8 @@ const {
   loginUser,
   getCurrentUser,
   logout,
+  getUserByEmail,
+  resetPassword
 } = require('./userService');
 
 module.exports = {
@@ -25,4 +27,6 @@ module.exports = {
   loginUser,
   getCurrentUser,
   logout,
+  getUserByEmail,
+  resetPassword
 };

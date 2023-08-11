@@ -9,7 +9,7 @@ const {
   deleteUser,
   updateMe,
   updateMyPassword,
-} = require('../../controllers/user');
+} = require('../controllers/user');
 
 const {
   checkUserId,
@@ -17,10 +17,10 @@ const {
   checkUpdateUserData,
   uploadUserAvatar,
   checkMyPassword,
-} = require('../../middlewares/user');
+} = require('../middlewares/user');
 
-const { protect, allowFor } = require('../../middlewares/auth');
-const userRolesEnum = require('../../constants/userRolesEnum');
+const { protect, allowFor } = require('../middlewares/auth');
+const userRolesEnum = require('../constants/userRolesEnum');
 
 const router = Router();
 

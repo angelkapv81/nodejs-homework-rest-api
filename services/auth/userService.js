@@ -3,6 +3,7 @@ const { AppError } = require('../../utils');
 const { signToken, checkToken } = require('./jwtService');
 const userRolesEnum = require('../../constants/userRolesEnum');
 const User = require('../../models/user');
+const crypto = require('crypto');
 
 /**
  * Check if user exists service.
@@ -148,4 +149,38 @@ exports.logout = async (token) => {
   if (!user) throw new AppError(401, 'Not authorized..');
 
   return { user };
+};
+
+/**
+ * Find user by email.
+ * @param {string} email - user email
+ * @returns {Promise<User>}
+ */
+exports.getUserByEmail = (email) => User.findOne({ email });
+
+/**
+ * FReset user Password.
+ * @param {string} otp - OneTiemPassword
+ * @param {string} password - new user password
+ * @returns {Promise<User>}
+ */
+exports.resetPassword = async (otp, password) => {
+  const hashedToken = crypto.createHash('sha256').update(otp).digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() }
+  });
+
+  if (!user) throw new AppError(400, 'Token is invalid..');
+
+  user.password = password;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  await user.save();
+
+  user.password = undefined;
+
+  return user;
 };
