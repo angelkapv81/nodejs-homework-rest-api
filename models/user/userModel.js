@@ -30,6 +30,14 @@ const userSchema = new Schema(
     avatar: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -54,7 +62,7 @@ userSchema.pre('save', async function(next) {
 });
 
 /**
- * Custom mongoose method to validate password. Will use in future.
+ * Custom mongoose method to validate password.
  * @param {string} candidate
  * @param {string} hash
  * @returns {Promise<boolean>}

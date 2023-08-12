@@ -7,6 +7,8 @@ const {
   createUserDataValidator,
 } = require('./userValidators');
 
+const { generateVerificationToken } = require('./generateVerificationToken');
+
 module.exports = {
   AppError,
   catchAsync,
@@ -14,4 +16,5 @@ module.exports = {
   signupUserDataValidator,
   updateUserDataValidator,
   createUserDataValidator,
+  generateVerificationToken
 };

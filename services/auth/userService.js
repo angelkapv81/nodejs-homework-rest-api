@@ -1,5 +1,5 @@
 const { Types } = require('mongoose');
-const { AppError } = require('../../utils');
+const { AppError, generateVerificationToken } = require('../../utils');
 const { signToken, checkToken } = require('./jwtService');
 const userRolesEnum = require('../../constants/userRolesEnum');
 const User = require('../../models/user');
@@ -86,19 +86,36 @@ exports.deleteUserById = (id) => User.findByIdAndDelete(id);
  * @returns {Object}
  */
 exports.signupUser = async (userData) => {
+  const { verificationToken, hashedToken } = generateVerificationToken();
+
   const newUserData = {
     ...userData,
     role: userRolesEnum.USER,
+    verificationToken: hashedToken,
   };
 
   const newUser = await User.create(newUserData);
 
   newUser.password = undefined;
+  newUser.verificationToken = verificationToken;
 
   const token = signToken(newUser.id);
 
   return { user: newUser, token };
 };
+
+/**
+ * Verify user email.
+ */
+exports.verifyUserEmail = async (verificationToken) => {
+  const hashedToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+
+  const user = await User.findOne({ verificationToken: hashedToken });
+
+  return user;
+};
+
+exports.requestVerification = () => {}
 
 /**
  * Check user login data and sign token.
@@ -159,7 +176,7 @@ exports.logout = async (token) => {
 exports.getUserByEmail = (email) => User.findOne({ email });
 
 /**
- * FReset user Password.
+ * Reset user Password.
  * @param {string} otp - OneTiemPassword
  * @param {string} password - new user password
  * @returns {Promise<User>}

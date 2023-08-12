@@ -1,6 +1,15 @@
 const { Router } = require('express');
 
-const { signup, login, logout, forgotPassword, resetPassword } = require('../controllers/auth');
+const {
+  signup,
+  login,
+  logout,
+  forgotPassword,
+  resetPassword,
+  verifyEmail,
+  requestVerification,
+} = require('../controllers/auth');
+
 const { checkSignupUserData } = require('../middlewares/auth');
 
 const router = Router();
@@ -19,5 +28,11 @@ router.post('/forgot-password', forgotPassword);
 
 // update password in DB
 router.patch('/reset-password/:otp', resetPassword);
+
+// Verify user email
+router.get('/verify/:verificationToken', verifyEmail);
+
+// Adding a second email to the user with a verification link
+router.post('/verify', requestVerification);
 
 module.exports = router;

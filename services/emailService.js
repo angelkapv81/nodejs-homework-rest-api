@@ -49,6 +49,10 @@ class Email {
   async sendRestorePassword() {
     await this._send('passwordreset', 'Password reset instruction..');
   }
+
+  async sendVefificationToken() {
+    await this._send('verificationemail', 'Verification email instruction..');
+  }
 }
 
 module.exports = Email;

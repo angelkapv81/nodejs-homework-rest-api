@@ -11,7 +11,9 @@ const {
   getCurrentUser,
   logout,
   getUserByEmail,
-  resetPassword
+  resetPassword,
+  verifyUserEmail,
+  requestVerification
 } = require('./userService');
 
 module.exports = {
@@ -28,5 +30,7 @@ module.exports = {
   getCurrentUser,
   logout,
   getUserByEmail,
-  resetPassword
+  resetPassword,
+  verifyUserEmail,
+  requestVerification
 };

@@ -5,7 +5,6 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const { authRoutes, contactRoutes, userRoutes } = require('./routes');
 
 dotenv.config({
   path:
@@ -13,6 +12,9 @@ dotenv.config({
       ? './environments/production.env'
       : './environments/development.env',
 });
+
+const { contactRoutes, authRoutes, userRoutes } = require('./routes');
+
 
 const app = express();
 
