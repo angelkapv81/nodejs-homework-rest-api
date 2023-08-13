@@ -12,7 +12,9 @@ const signup = catchAsync(async (req, res) => {
   const { verificationToken } = user;
 
   try {
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/verify/${verificationToken}`;
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/api/auth/verify/${verificationToken}`;
 
     await new Email(user, resetUrl).sendVefificationToken();
   } catch (err) {
@@ -28,9 +30,15 @@ const signup = catchAsync(async (req, res) => {
 const login = catchAsync(async (req, res) => {
   const { user, token } = await userService.loginUser(req.body);
 
-  res.status(200).json({
-    user,
-    token,
+  if (user.verify) {
+    res.status(200).json({
+      user,
+      token,
+    });
+  }
+
+  res.status(403).json({
+    msg: 'User not verified..',
   });
 });
 
@@ -64,7 +72,9 @@ const forgotPassword = catchAsync(async (req, res) => {
 
   // send otp by email
   try {
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/reset-password/${otp}`;
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/api/auth/reset-password/${otp}`;
 
     await new Email(user, resetUrl).sendRestorePassword();
   } catch (err) {
@@ -82,7 +92,10 @@ const forgotPassword = catchAsync(async (req, res) => {
 });
 
 const resetPassword = catchAsync(async (req, res) => {
-  const updatedUser = await userService.resetPassword(req.params.otp, req.body.password);
+  const updatedUser = await userService.resetPassword(
+    req.params.otp,
+    req.body.password
+  );
 
   res.status(200).json({
     user: updatedUser,
@@ -96,7 +109,7 @@ const verifyEmail = catchAsync(async (req, res) => {
 
   if (!user) {
     return res.status(404).json({
-      msg: 'User not found..'
+      msg: 'User not found..',
     });
   }
 
@@ -105,30 +118,28 @@ const verifyEmail = catchAsync(async (req, res) => {
 
   user.save();
 
-  res.status(200).json(
-    {
-      msg: 'Verification successful..'
-    }
-  );
+  res.status(200).json({
+    msg: 'Verification successful..',
+  });
 });
 
 const requestVerification = catchAsync(async (req, res) => {
   if (!req.body.email) {
     return res.json({
-      msg: 'missing required field email'
+      msg: 'missing required field email',
     });
   }
   const user = await userService.getUserByEmail(req.body.email);
 
   if (!user) {
     return res.status(404).json({
-      msg: 'User not found..'
+      msg: 'User not found..',
     });
   }
 
   if (user.verify) {
     return res.status(400).json({
-      msg: 'Verification has already been passed..'
+      msg: 'Verification has already been passed..',
     });
   }
 
@@ -138,17 +149,17 @@ const requestVerification = catchAsync(async (req, res) => {
   user.save();
 
   try {
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/verify/${verificationToken}`;
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/api/auth/verify/${verificationToken}`;
     await new Email(user, resetUrl).sendVefificationToken();
   } catch (err) {
     console.log(err);
   }
 
-  res.status(200).json(
-    {
-      msg: 'Verification email sent..'
-    }
-  );
+  res.status(200).json({
+    msg: 'Verification email sent..',
+  });
 });
 
 module.exports = {
@@ -158,5 +169,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  requestVerification
+  requestVerification,
 };
