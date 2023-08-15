@@ -1,7 +1,19 @@
 const {
   signup,
   login,
-  logout
+  logout,
+  forgotPassword,
+  resetPassword,
+  verifyEmail,
+  requestVerification
 } = require('./authController');
 
-module.exports = { signup, login, logout};
+module.exports = {
+  signup,
+  login,
+  logout,
+  forgotPassword,
+  resetPassword,
+  verifyEmail,
+  requestVerification
+};

@@ -13,9 +13,8 @@ dotenv.config({
       : './environments/development.env',
 });
 
-const contactRoutes = require('./routes/contacts');
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
+const { contactRoutes, authRoutes, userRoutes } = require('./routes');
+
 
 const app = express();
 

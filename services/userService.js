@@ -2,7 +2,7 @@ const { Types } = require('mongoose');
 
 const User = require('../models/user');
 const { AppError } = require('../utils');
-const { signToken } = require('../services/auth');
+const { signToken } = require('./auth');
 const userRolesEnum = require('../constants/userRolesEnum');
 
 /**
